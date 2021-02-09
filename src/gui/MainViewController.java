@@ -3,6 +3,7 @@ package gui;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
 
 import application.Main;
 import gui.util.Alerts;
@@ -35,12 +36,15 @@ public class MainViewController implements Initializable {
 
 	@FXML
 	public void onMenuItemDepartmentAction() {
-		loadView2("/gui/DepartmentList.fxml");
+		loadView("/gui/DepartmentList.fxml", (DepartmentListController controller) -> {
+			controller.setDepartmentService(new DepartmentService());
+			controller.updateTableView();
+		});
 	}
 
 	@FXML
 	public void onMenuItemAboutAction() {
-		loadView("/gui/About.fxml");
+		loadView("/gui/About.fxml", x -> {}); // passando uma funcao que nao faz nada pois a tela About é estatitca
 	}
 
 	@Override
@@ -48,7 +52,7 @@ public class MainViewController implements Initializable {
 
 	}
 
-	private synchronized void loadView(String absoluteName) {
+	private synchronized <T> void loadView(String absoluteName, Consumer<T> initializingAction) {
 		try {
 
 			FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
@@ -63,12 +67,16 @@ public class MainViewController implements Initializable {
 			mainVBox.getChildren().clear();
 			mainVBox.getChildren().add(mainMenu);
 			mainVBox.getChildren().addAll(newVBox.getChildren());
+			
+			T controller = loader.getController(); // executando a função passada como argumento
+			initializingAction.accept(controller);
+			
 
 		} catch (IOException e) {
 			Alerts.showAlert("IO Exception", "Error loading view", e.getMessage(), AlertType.ERROR);
 		}
 	}
-	
+	/*
 	private synchronized void loadView2(String absoluteName) {
 		try {
 
@@ -94,5 +102,6 @@ public class MainViewController implements Initializable {
 			Alerts.showAlert("IO Exception", "Error loading view", e.getMessage(), AlertType.ERROR);
 		}
 	}
+	*/
 
 }
