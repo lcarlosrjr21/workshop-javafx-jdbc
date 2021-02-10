@@ -7,18 +7,26 @@ import model.dao.DepartmentDAO;
 import model.entities.Department;
 
 public class DepartmentService {
-	
+
 	private DepartmentDAO dao = DaoFactory.createDepartmentDao();
 
-	public List<Department> findAll(){
-		
+	public List<Department> findAll() {
+
 		return dao.findAll();
-				
-		/* dados MOCK "mokado"
-		List<Department> list = new ArrayList<>();
-		list.add(new Department(10,"Books"));
-		list.add(new Department(11,"Computers"));
-		list.add(new Department(12,"CDs"));
-		return list;*/
+
 	}
+
+	public void saveOrUpdate(Department obj) {
+		if (obj.getId() == null) {
+			dao.insert(obj);
+		} else {
+			dao.update(obj);
+		}
+	}
+
+	/*
+	 * dados MOCK "mokado" List<Department> list = new ArrayList<>(); list.add(new
+	 * Department(10,"Books")); list.add(new Department(11,"Computers"));
+	 * list.add(new Department(12,"CDs")); return list;
+	 */
 }
