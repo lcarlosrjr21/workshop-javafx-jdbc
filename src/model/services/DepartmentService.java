@@ -23,6 +23,10 @@ public class DepartmentService {
 			dao.update(obj);
 		}
 	}
+	
+	public void remove(Department obj) {
+		dao.deleteById(obj.getId());
+	}
 
 	/*
 	 * dados MOCK "mokado" List<Department> list = new ArrayList<>(); list.add(new
